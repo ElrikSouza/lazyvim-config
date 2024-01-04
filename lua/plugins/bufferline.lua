@@ -11,4 +11,21 @@ return {
       { "<leader>d", "<cmd><cr>" },
     },
   },
+  {
+    "neovim/nvim-lspconfig",
+    ---@class PluginLspOpts
+    opts = {
+      ---@type lspconfig.options
+      servers = {
+        tsserver = {
+          init_options = {
+            preferences = {
+              importModuleSpecifierPreference = "relative",
+              importModuleSpecifierEnding = "minimal",
+            },
+          },
+        },
+      },
+    },
+  },
 }
