@@ -85,6 +85,7 @@ return {
   },
 
   -- add pyright to lspconfig
+  --[[
   {
     "neovim/nvim-lspconfig",
     ---@class PluginLspOpts
@@ -102,8 +103,10 @@ return {
       },
     },
   },
+  ]]
 
   -- add tsserver and setup with typescript.nvim instead of lspconfig
+  --[[
   {
     "neovim/nvim-lspconfig",
     dependencies = {
@@ -137,6 +140,8 @@ return {
       },
     },
   },
+  ]]
+  --
 
   -- for typescript, LazyVim also includes extra specs to properly setup lspconfig,
   -- treesitter, mason and typescript.nvim. So instead of the above, you can use:
