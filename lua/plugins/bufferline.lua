@@ -29,15 +29,17 @@ return {
             },
             typescript = {
               updateImportsOnFileMove = { enabled = "always" },
-              importModuleSpecifierPreference = "relative",
-              importModuleSpecifierEnding = "minimal",
               experimental = {
                 completion = {
                   enableServerSideFuzzyMatch = true,
                 },
               },
+              importModuleSpecifier = "relative",
+              importModuleSpecifierEnding = "minimal",
               suggest = {
                 completeFunctionCalls = true,
+                importModuleSpecifier = "relative",
+                importModuleSpecifierEnding = "minimal",
               },
               inlayHints = {
                 enumMemberValues = { enabled = true },
@@ -53,36 +55,44 @@ return {
             {
               "gd",
               function()
-                require("vtsls").commands.goto_source_definition(0)
+                local params = vim.lsp.util.make_position_params()
+                LazyVim.lsp.execute({
+                  command = "typescript.goToSourceDefinition",
+                  arguments = { params.textDocument.uri, params.position },
+                  open = true,
+                })
               end,
               desc = "Goto Source Definition",
             },
             {
               "gr",
               function()
-                require("vtsls").commands.file_references(0)
+                LazyVim.lsp.execute({
+                  command = "typescript.findAllFileReferences",
+                  arguments = { vim.uri_from_bufnr(0) },
+                  open = true,
+                })
               end,
               desc = "File References",
             },
             {
               "<leader>co",
-              function()
-                require("vtsls").commands.organize_imports(0)
-              end,
+              LazyVim.lsp.action["source.organizeImports"],
               desc = "Organize Imports",
             },
             {
-              "<leader>cm",
-              function()
-                require("vtsls").commands.add_missing_imports(0)
-              end,
+              "<leader>cM",
+              LazyVim.lsp.action["source.addMissingImports.ts"],
               desc = "Add missing imports",
             },
             {
-              "<leader>cd",
-              function()
-                require("vtsls").commands.fix_all(0)
-              end,
+              "<leader>cu",
+              LazyVim.lsp.action["source.removeUnused.ts"],
+              desc = "Remove unused imports",
+            },
+            {
+              "<leader>cD",
+              LazyVim.lsp.action["source.fixAll.ts"],
               desc = "Fix all diagnostics",
             },
           },
@@ -92,6 +102,11 @@ return {
         tsserver = function()
           -- disable tsserver
           return true
+        end,
+        vtsls = function(_, opts)
+          -- copy typescript settings to javascript
+          opts.settings.javascript =
+            vim.tbl_deep_extend("force", {}, opts.settings.typescript, opts.settings.javascript or {})
         end,
       },
     },
